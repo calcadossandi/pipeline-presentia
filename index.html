@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pipeline Comercial do WhatsApp — Presentia Brindes</title>
+<style>
+  :root{
+    --bg:#0b141a; --panel:#111b21; --panel2:#1a262e; --line:#22323c;
+    --txt:#e9edef; --muted:#8696a0; --green:#25d366; --greend:#1da851;
+    --teal:#00a884; --amber:#ffb020; --red:#f15c5c; --blue:#53bdeb;
+    --chip:#202c33;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.45}
+  a{color:var(--teal)}
+  .wrap{max-width:1280px;margin:0 auto;padding:22px 18px 60px}
+  header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--green),var(--teal));display:flex;align-items:center;justify-content:center;font-size:22px}
+  h1{font-size:21px;margin:0;font-weight:700;letter-spacing:.2px}
+  .sub{color:var(--muted);font-size:13px;margin-top:2px}
+  .meta{text-align:right;font-size:12px;color:var(--muted)}
+  .meta b{color:var(--txt)}
+
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 15px;position:relative;overflow:hidden}
+  .kpi .lab{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .kpi .val{font-size:26px;font-weight:800;margin-top:6px}
+  .kpi .hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+  .kpi.accent{background:linear-gradient(135deg,#10241c,#0e1c17);border-color:#1c3a2e}
+  .kpi.accent .val{color:var(--green)}
+  .kpi.warn .val{color:var(--amber)}
+  .kpi.danger .val{color:var(--red)}
+
+  .banner{background:linear-gradient(135deg,#15281f,#0f1f18);border:1px solid #1f4133;border-radius:14px;padding:14px 16px;margin:14px 0 26px;display:flex;gap:12px;align-items:flex-start}
+  .banner .ic{font-size:20px}
+  .banner b{color:var(--green)}
+
+  h2.sec{font-size:15px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin:30px 0 14px;font-weight:700}
+
+  .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(255px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
+  .col{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-height:120px}
+  .col h3{margin:0;padding:12px 13px;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+  .col h3 .n{background:var(--chip);color:var(--muted);border-radius:20px;padding:1px 9px;font-size:11.5px;font-weight:700}
+  .col .body{padding:10px;display:flex;flex-direction:column;gap:9px}
+  .card{background:var(--panel2);border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:10px 11px}
+  .card.g{border-left-color:var(--green)} .card.y{border-left-color:var(--amber)} .card.r{border-left-color:var(--red)} .card.n{border-left-color:#3a4a54}
+  .card .nm{font-weight:700;font-size:13.5px;display:flex;justify-content:space-between;gap:6px;align-items:center}
+  .card .pr{font-size:12.5px;color:var(--txt);margin-top:3px}
+  .card .vl{font-size:12.5px;color:var(--green);font-weight:700;margin-top:5px}
+  .card .nx{font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .dot.g{background:var(--green)} .dot.y{background:var(--amber)} .dot.r{background:var(--red)}
+  .tag{font-size:10px;background:var(--chip);color:var(--muted);border-radius:5px;padding:1px 6px;margin-left:4px}
+  .med{font-size:10.5px;color:var(--blue)}
+
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:13px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--panel2);color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px}
+  tr:last-child td{border-bottom:none}
+  .pri{font-weight:800;border-radius:6px;padding:2px 8px;font-size:11.5px;display:inline-block}
+  .p1{background:#3a1414;color:#ff8a8a} .p2{background:#3a2c10;color:#ffce7a} .p3{background:#16302a;color:#7fe3bf}
+
+  .diag{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .diag p{margin:0 0 12px}
+  .diag .hl{color:var(--green);font-weight:700}
+  .diag .rl{color:var(--red);font-weight:700}
+
+  .msgs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .msg{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
+  .msg .to{font-size:12px;color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .bubble{background:#005c4b;border-radius:9px;padding:10px 12px;font-size:13.5px;white-space:pre-wrap}
+  .copy{background:var(--chip);color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:4px 10px;font-size:11.5px;cursor:pointer}
+  .copy:hover{background:#2a3942}
+  .copy.ok{background:var(--greend);border-color:var(--greend);color:#fff}
+
+  .note{font-size:11.5px;color:var(--muted);margin-top:8px}
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11.5px}
+  @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.msgs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="logo">📊</div>
+      <div>
+        <h1>Pipeline Comercial do WhatsApp</h1>
+        <div class="sub">Presentia Brindes · moletom canguru, corta-vento e personalização com logo</div>
+      </div>
+    </div>
+    <div class="meta">
+      <div>Gerado em <b>30/06/2026</b></div>
+      <div>Fonte: <b>WhatsApp Business Web</b> (≈62 conversas)</div>
+      <div>Análise: <b>skill Pipeline Analyst</b></div>
+    </div>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi accent">
+      <div class="lab">Pipeline aberto</div>
+      <div class="val">≈ R$ 11,8 mil</div>
+      <div class="hint">em deals com sinal claro · estimado</div>
+    </div>
+    <div class="kpi">
+      <div class="lab">Oportunidades abertas</div>
+      <div class="val">22</div>
+      <div class="hint">+ ~25 leads frios de topo</div>
+    </div>
+    <div class="kpi">
+      <div class="lab">Deals quentes</div>
+      <div class="val" style="color:var(--green)">5</div>
+      <div class="hint">prontos pra fechar hoje</div>
+    </div>
+    <div class="kpi warn">
+      <div class="lab">Parados / em risco</div>
+      <div class="val">7</div>
+      <div class="hint">proposta enviada sem resposta</div>
+    </div>
+    <div class="kpi danger">
+      <div class="lab">Maior risco</div>
+      <div class="val">R$ 5,1 mil</div>
+      <div class="hint">30 moletons travados por preço</div>
+    </div>
+  </div>
+
+  <div class="banner">
+    <div class="ic">🎯</div>
+    <div>
+      <b>Melhor ação para hoje:</b> fechar o revendedor com CNPJ <b>(31) •••-1308</b> — ele já pediu nota fiscal de 11 peças e quer recompra recorrente pela loja dele. Em paralelo, destravar o pedido de <b>30 moletons (~R$ 5,1 mil)</b> da (51) •••-3978, parado há 15 dias por aumento de preço. São as duas conversas onde tem mais dinheiro vivo agora.
+    </div>
+  </div>
+
+  <!-- KANBAN -->
+  <h2 class="sec">Pipeline por etapa (Kanban)</h2>
+  <div class="board">
+
+    <div class="col">
+      <h3>Prospecção <span class="n">~30</span></h3>
+      <div class="body">
+        <div class="card n">
+          <div class="nm">Disparos "envie sua logo" <span class="dot y"></span></div>
+          <div class="pr">~12 contatos receberam a simulação de logo e ainda não responderam</div>
+          <div class="nx">Próx.: 1 follow-up curto em até 24h, depois pausar</div>
+        </div>
+        <div class="card n">
+          <div class="nm">Promo Moletom R$119,90 <span class="dot y"></span></div>
+          <div class="pr">~8 contatos receberam o broadcast da promoção, sem resposta</div>
+          <div class="nx">Próx.: aguardar; não insistir mais de 1x</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Qualificação <span class="n">4</span></h3>
+      <div class="body">
+        <div class="card y">
+          <div class="nm">(14) •••-2244 <span class="dot y"></span></div>
+          <div class="pr">Ajuste de arte: "tem que ser sem fundo" <span class="med">MEDDPICC 7</span></div>
+          <div class="vl">R$ 240 (est.)</div>
+          <div class="nx">Próx.: enviar mockup com logo sem fundo</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(11) •••-2244 grupo logos <span class="dot y"></span></div>
+          <div class="pr">Vários discutindo cor/fundo da estampa</div>
+          <div class="nx">Próx.: confirmar quantidade e tamanhos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Proposta enviada <span class="n">6</span></h3>
+      <div class="body">
+        <div class="card y">
+          <div class="nm">(11) •••-5421 <span class="dot y"></span></div>
+          <div class="pr">Mockup enviado · "vamos seguir?" — sem resposta <span class="med">MEDDPICC 8</span></div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: follow-up reservando vaga na produção</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(64) •••-5722 <span class="dot y"></span></div>
+          <div class="pr">Mockup enviado · aguardando confirmação</div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: follow-up com prazo</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(34) •••-4724 <span class="dot y"></span></div>
+          <div class="pr">Mockup enviado · aguardando</div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: follow-up</div>
+        </div>
+        <div class="card r">
+          <div class="nm">(34) •••-4528 <span class="dot r"></span></div>
+          <div class="pr">Mockup enviado ontem · esfriando</div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: reativar hoje antes de perder</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(24) •••-8734 <span class="dot y"></span></div>
+          <div class="pr">Corta-vento a R$169,90 cotado</div>
+          <div class="vl">R$ 340 (est.)</div>
+          <div class="nx">Próx.: confirmar cor e quantidade</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Negociação <span class="n">5</span></h3>
+      <div class="body">
+        <div class="card r">
+          <div class="nm">(51) •••-3978 <span class="dot r"></span></div>
+          <div class="pr">30 moletons c/ capuz removível. Cotado R$169,90; novo lote subiu p/ R$189,90. Parado 15 dias, decisor = gerência <span class="med">MEDDPICC 10</span></div>
+          <div class="vl">R$ 5.097 (30 × 169,90)</div>
+          <div class="nx">Próx.: decisão de preço HOJE — honrar 169,90 ou meio-termo</div>
+        </div>
+        <div class="card g">
+          <div class="nm">(31) •••-1308 <span class="dot g"></span></div>
+          <div class="pr">Revendedor c/ CNPJ. Nota de 11 peças saindo + recompra pela loja dele <span class="med">MEDDPICC 12</span></div>
+          <div class="vl">R$ 1.319 (11 × 119,90)</div>
+          <div class="nx">Próx.: enviar dados p/ NF e condição de revenda</div>
+        </div>
+        <div class="card g">
+          <div class="nm">(54) •••-3041 <span class="dot g"></span></div>
+          <div class="pr">Arte aprovada: "é assim que queremos"</div>
+          <div class="vl">R$ 600 (est.)</div>
+          <div class="nx">Próx.: fechar quantidade e pagamento</div>
+        </div>
+        <div class="card g">
+          <div class="nm">(21) •••-5859 <span class="dot g"></span></div>
+          <div class="pr">Quantidade definida: 3 unidades</div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: enviar link/Pix e fechar</div>
+        </div>
+        <div class="card y">
+          <div class="nm">Aninha (recorrente) <span class="dot y"></span></div>
+          <div class="pr">"G1 e infantil, vale a lista antiga" — cliente recorrente</div>
+          <div class="vl">R$ 1.200 (est.)</div>
+          <div class="nx">Próx.: confirmar grade e fechar pedido</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Fechamento / frete <span class="n">4</span></h3>
+      <div class="body">
+        <div class="card g">
+          <div class="nm">(75) •••-0777 <span class="dot g"></span></div>
+          <div class="pr">"Me passe seu CEP" — calculando frete</div>
+          <div class="vl">R$ 240 (est.)</div>
+          <div class="nx">Próx.: cliente enviar CEP → fechar</div>
+        </div>
+        <div class="card g">
+          <div class="nm">(32) •••-7798 <span class="dot g"></span></div>
+          <div class="pr">"Me passe seu CEP pra cotar o frete"</div>
+          <div class="vl">R$ 240 (est.)</div>
+          <div class="nx">Próx.: aguardando CEP do cliente</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(19) •••-1465 <span class="dot y"></span></div>
+          <div class="pr">"Aguardo seu retorno!"</div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: 1 follow-up objetivo</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(84) •••-4489 <span class="dot y"></span></div>
+          <div class="pr">"Aguardo seu retorno"</div>
+          <div class="vl">R$ 360 (est.)</div>
+          <div class="nx">Próx.: follow-up</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Cliente ativo <span class="n">2</span></h3>
+      <div class="body">
+        <div class="card g">
+          <div class="nm">(47) •••-2261 <span class="dot g"></span></div>
+          <div class="pr">"Gostei do trabalho de vcs" ❤️ — pedido entregue</div>
+          <div class="nx">Próx.: pedir indicação/avaliação · oferta recompra</div>
+        </div>
+        <div class="card y">
+          <div class="nm">(11) •••-2688 <span class="dot y"></span></div>
+          <div class="pr">Pós-venda: reposição + rastreio p/ devolução</div>
+          <div class="nx">Próx.: resolver troca rápido p/ proteger reputação</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Dormindo / Perdido <span class="n">2+</span></h3>
+      <div class="body">
+        <div class="card n">
+          <div class="nm">(11) •••-2653 <span class="dot r"></span></div>
+          <div class="pr">"Que pena" — declinou</div>
+          <div class="nx">Próx.: marcar perdido · registrar motivo</div>
+        </div>
+        <div class="card n">
+          <div class="nm">(11) •••-2272 <span class="dot y"></span></div>
+          <div class="pr">"Bom dia" sem avanço · não lida</div>
+          <div class="nx">Próx.: responder e qualificar</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INTERVENÇÕES -->
+  <h2 class="sec">Intervenções prioritárias</h2>
+  <table>
+    <thead><tr><th>#</th><th>Cliente</th><th>Problema</th><th>Ação recomendada</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="pri p1">1</span></td>
+        <td><b>(51) •••-3978</b><br><span style="color:var(--muted)">30 moletons</span></td>
+        <td>Parado há 15 dias. Cotado R$169,90, novo lote a R$189,90. Cliente esperando posição da gerência.</td>
+        <td>Decidir o preço HOJE e responder. Honrar 169,90 ou oferecer 179,90 com brinde. Silêncio = perda de R$ 5 mil.</td>
+        <td><b>R$ 5.097</b></td>
+      </tr>
+      <tr>
+        <td><span class="pri p1">2</span></td>
+        <td><b>(31) •••-1308</b><br><span style="color:var(--muted)">revendedor CNPJ</span></td>
+        <td>Quer NF de 11 peças e recompra recorrente pela loja dele. Acionou o financeiro.</td>
+        <td>Enviar dados p/ emissão da NF + tabela de revenda. Transformar em cliente recorrente.</td>
+        <td><b>R$ 1.319</b> + recorrência</td>
+      </tr>
+      <tr>
+        <td><span class="pri p2">3</span></td>
+        <td><b>(34) •••-4528</b></td>
+        <td>Mockup enviado ontem, sem resposta. Esfriando.</td>
+        <td>Reativar hoje com reserva de vaga na produção.</td>
+        <td>R$ 360 (est.)</td>
+      </tr>
+      <tr>
+        <td><span class="pri p2">4</span></td>
+        <td><b>(11) •••-2688</b></td>
+        <td>Pós-venda: troca/reposição pendente. Risco de reputação.</td>
+        <td>Resolver troca e enviar rastreio rápido. Cliente insatisfeito vira avaliação ruim.</td>
+        <td>Retenção</td>
+      </tr>
+      <tr>
+        <td><span class="pri p3">5</span></td>
+        <td><b>(54) •••-3041</b> · <b>(21) •••-5859</b></td>
+        <td>Arte aprovada / quantidade definida. Só falta o "sim".</td>
+        <td>Enviar Pix/link e fechar ainda hoje.</td>
+        <td>R$ 960 (est.)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- DIAGNÓSTICO -->
+  <h2 class="sec">Diagnóstico comercial</h2>
+  <div class="diag">
+    <p>O problema aqui <span class="rl">não é falta de lead</span>. O topo do funil está cheio: dezenas de contatos recebendo simulação de logo e a promoção de moletom. O vazamento está no <span class="hl">meio do funil</span> — entre "mandei o mockup" e "fechou".</p>
+    <p>Tem um padrão claro: vários clientes receberam <b>"mockup enviado, vamos seguir?"</b> e ninguém puxou o próximo passo. Isso é dinheiro parado. Cada mockup sem follow-up em 24h vira um deal frio. Hoje são pelo menos <b>6 propostas</b> nesse limbo.</p>
+    <p>O maior buraco isolado é o pedido de <span class="rl">30 moletons (~R$ 5,1 mil)</span>: ele não está perdido, está <b>esperando uma decisão sua de preço</b>. Quinze dias em silêncio numa conta desse tamanho é o risco número um do pipeline.</p>
+    <p>A melhor notícia é o <span class="hl">revendedor com CNPJ (31) •••-1308</span>: ele não quer só comprar, quer revender pela loja dele. Esse não é um pedido, é um <b>canal recorrente</b>. Priorize a NF e uma condição de revenda — vale mais que o ticket de hoje.</p>
+    <p><b>Movimento nº 1:</b> bloquear 30 min hoje só para responder os deals de Negociação e Proposta enviada (frete, mockup, preço). É onde está o dinheiro mais perto de virar venda.</p>
+  </div>
+
+  <!-- MENSAGENS -->
+  <h2 class="sec">Mensagens prontas para enviar</h2>
+  <div class="msgs">
+
+    <div class="msg">
+      <div class="to"><span>Para (51) •••-3978 — 30 moletons (preço)</span><button class="copy" onclick="cp(this)">Copiar</button></div>
+      <div class="bubble">Oi! Consegui retorno aqui sobre os 30 moletons com capuz removível. O lote novo realmente subiu, mas pra fechar com você eu seguro em R$ 174,90 cada, com frete incluso. Consigo reservar sua vaga na produção ainda hoje. Fechamos?</div>
+    </div>
+
+    <div class="msg">
+      <div class="to"><span>Para (31) •••-1308 — revendedor CNPJ</span><button class="copy" onclick="cp(this)">Copiar</button></div>
+      <div class="bubble">Perfeito! Já consigo emitir a nota das 11 peças. Me confirma a razão social e o endereço de faturamento que adianto aqui. E como você vende pela sua loja, te mando também nossa tabela de revenda pra você ter margem nas próximas. Fechado?</div>
+    </div>
+
+    <div class="msg">
+      <div class="to"><span>Para mockups sem resposta (11/64/34)</span><button class="copy" onclick="cp(this)">Copiar</button></div>
+      <div class="bubble">Oi! Passando pra confirmar se você viu o mockup que mandei. Tá lindo o resultado 🙂 Consigo reservar sua vaga na produção, mas as datas estão fechando. Seguimos com o pedido?</div>
+    </div>
+
+    <div class="msg">
+      <div class="to"><span>Para (34) •••-4528 — esfriando</span><button class="copy" onclick="cp(this)">Copiar</button></div>
+      <div class="bubble">Oi! Fiquei com seu mockup em aberto aqui. Ainda faz sentido pra você ou posso pausar por enquanto? Se quiser, já deixo encaminhado pra produção hoje.</div>
+    </div>
+
+    <div class="msg">
+      <div class="to"><span>Para (54) •••-3041 — arte aprovada</span><button class="copy" onclick="cp(this)">Copiar</button></div>
+      <div class="bubble">Que bom que ficou do jeito que vocês queriam! 🙌 Pra eu já adiantar a produção, me confirma a quantidade e o tamanho. Te mando o Pix e deixo seu pedido na fila ainda hoje.</div>
+    </div>
+
+    <div class="msg">
+      <div class="to"><span>Para (11) •••-2688 — pós-venda</span><button class="copy" onclick="cp(this)">Copiar</button></div>
+      <div class="bubble">Oi! Já estou providenciando a reposição da sua peça. Te mando o código de rastreio assim que sair e combino a logística da devolução do jeito mais fácil pra você. Pode deixar que resolvo.</div>
+    </div>
+
+  </div>
+
+  <p class="note">⚠️ Valores marcados como "est." são estimativas com base no produto e no ticket médio (Moletom canguru R$119,90 · Corta-vento R$169,90 · Moletom c/ capuz R$169,90–189,90). Confirme antes de qualquer decisão financeira. Telefones mascarados por privacidade — identificação operacional por DDD + 4 últimos dígitos.</p>
+
+  <footer>
+    Pipeline gerado a partir das conversas do WhatsApp Business Web em 30/06/2026 · análise pela skill "whatsapp-pipeline-analyst".
+    O CRM (Google Sheets "Presentia Brindes") não pôde ser lido célula a célula por aqui (renderização em canvas + abas protegidas) — o pipeline acima reflete o WhatsApp ao vivo.
+  </footer>
+
+</div>
+<script>
+function cp(btn){
+  var t=btn.parentElement.parentElement.querySelector('.bubble').innerText;
+  var done=function(){var o=btn.textContent;btn.textContent='Copiado ✓';btn.classList.add('ok');setTimeout(function(){btn.textContent=o;btn.classList.remove('ok')},1500)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(function(){fallback(t,done)})}
+  else{fallback(t,done)}
+}
+function fallback(t,done){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta);done()}
+</script>
+</body>
+</html>
